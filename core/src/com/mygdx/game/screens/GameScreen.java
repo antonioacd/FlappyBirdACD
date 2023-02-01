@@ -1,35 +1,49 @@
 package com.mygdx.game.screens;
 
+import static com.mygdx.game.extra.Utils.USER_BIRD;
+import static com.mygdx.game.extra.Utils.USER_FLOOR;
 import static com.mygdx.game.extra.Utils.WORLD_HEIGHT;
 import static com.mygdx.game.extra.Utils.WORLD_WIDTH;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.MainGame;
-import com.mygdx.game.actors.Goku;
+import com.mygdx.game.actors.Bird;
+import com.mygdx.game.actors.Pipes;
+
 //PANTALLA DEL JUEGO
 public class GameScreen  extends BaseScreen{
     //Escenario
     private Stage stage;
     //Actor
-    private Goku goku;
+    private Bird bird;
     //Fondo
     private Image background;
     //Mundo
     private World world;
 
+    Pipes pipes;
 
-    //DEPURACIÓN
-    //renderizado
+    private Music bgMusic;
+
+    //Depuracion
     private Box2DDebugRenderer debugRenderer;
     //camara ortografica
     private OrthographicCamera ortCamera;
@@ -46,6 +60,8 @@ public class GameScreen  extends BaseScreen{
         FitViewport fitViewport = new FitViewport(WORLD_WIDTH, WORLD_HEIGHT);
         //Se le pone al stage
         this.stage = new Stage(fitViewport);
+        //Ponemos la musica de fondo
+        this.bgMusic = this.mainGame.assetManager.getMusicBG();
         //Se inicializa la camara ortografica
         this.ortCamera = (OrthographicCamera) this.stage.getCamera();
         //Se inicializa el renderizado
@@ -65,14 +81,39 @@ public class GameScreen  extends BaseScreen{
     }
 
     //Se añade el actor
-    public void addActor(){
+    public void addActor() {
         //creamos una animacion (sprite)
         //y la inicializamos al conjunto de assets del actor
-        Animation<TextureRegion> gokuSprite = mainGame.assetManager.getBirdAnimation();
+        Animation<TextureRegion> birdSprite = mainGame.assetManager.getBirdAnimation();
+        Sound sound = mainGame.assetManager.getJumpSound();
         //Inicializo al actor creandolo con el constructor de su clase
-        this.goku = new Goku(this.world, gokuSprite, new Vector2(1f,4f));
+        this.bird = new Bird(this.world, birdSprite, sound, new Vector2(1f, 4f));
         //añado el actor a la escena
-        this.stage.addActor(this.goku);
+        this.stage.addActor(this.bird);
+    }
+
+    private void addFloor() {
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.position.set(WORLD_WIDTH / 2f, -0.5f);
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        Body body = world.createBody(bodyDef);
+        body.setUserData(USER_FLOOR);
+
+        PolygonShape edge = new PolygonShape();
+        edge.setAsBox(2.3f, 0.5f);
+        body.createFixture(edge, 3);
+        edge.dispose();
+    }
+
+    public void addRoof(){
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        Body body = world.createBody(bodyDef);
+
+        EdgeShape edge = new EdgeShape();
+        edge.set(0,WORLD_HEIGHT,WORLD_WIDTH,WORLD_HEIGHT);
+        body.createFixture(edge, 1);
+        edge.dispose();
     }
 
     //aqui va el renderizado
@@ -95,14 +136,30 @@ public class GameScreen  extends BaseScreen{
     @Override
     public void show() {
         addBackground();
+        addFloor();
+        addRoof();
         addActor();
+
+        TextureRegion pipeTRDown = mainGame.assetManager.getPipeDownTR();
+        TextureRegion pipeTRDTop = mainGame.assetManager.getPipeTopTR();
+        this.pipes = new Pipes(this.world, pipeTRDown, pipeTRDTop,new Vector2(3.75f,2f));
+        this.stage.addActor(this.pipes);
+
+        this.bgMusic.setLooping(true);
+        this.bgMusic.play();
+
     }
 
     //para ocultar
     @Override
     public void hide() {
-        this.goku.detach();
-        this.goku.remove();
+        this.bird.detach();
+        this.bird.remove();
+
+        this.pipes.detach();
+        this.pipes.remove();
+
+        this.bgMusic.stop();
     }
 
     //para colocar

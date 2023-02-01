@@ -1,0 +1,83 @@
+
+FBAtlas.png
+size: 1028, 3840
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Logs1
+  rotate: false
+  xy: 279, 1321
+  size: 237, 1089
+  orig: 237, 1089
+  offset: 0, 0
+  index: -1
+Logs2
+  rotate: false
+  xy: 2, 1313
+  size: 275, 1097
+  orig: 275, 1097
+  offset: 0, 0
+  index: -1
+Logs3
+  rotate: false
+  xy: 518, 1319
+  size: 233, 1091
+  orig: 233, 1091
+  offset: 0, 0
+  index: -1
+Logs4
+  rotate: false
+  xy: 2, 223
+  size: 252, 1088
+  orig: 252, 1088
+  offset: 0, 0
+  index: -1
+c5f8d7d81c4ca521b96cca08485270dd
+  rotate: false
+  xy: 256, 434
+  size: 654, 97
+  orig: 654, 97
+  offset: 0, 0
+  index: -1
+fce282b67c49181886d1f5c651c8c7b0
+  rotate: false
+  xy: 256, 533
+  size: 698, 115
+  orig: 698, 115
+  offset: 0, 0
+  index: -1
+frame-1
+  rotate: false
+  xy: 256, 650
+  size: 281, 219
+  orig: 281, 219
+  offset: 0, 0
+  index: -1
+frame-2
+  rotate: false
+  xy: 256, 1092
+  size: 281, 219
+  orig: 281, 219
+  offset: 0, 0
+  index: -1
+frame-3
+  rotate: false
+  xy: 2, 2
+  size: 281, 219
+  orig: 281, 219
+  offset: 0, 0
+  index: -1
+frame-4
+  rotate: false
+  xy: 256, 871
+  size: 281, 219
+  orig: 281, 219
+  offset: 0, 0
+  index: -1
+Background
+  rotate: false
+  xy: 2, 2412
+  size: 1024, 1369
+  orig: 1024, 1369
+  offset: 0, 0
+  index: 946547
